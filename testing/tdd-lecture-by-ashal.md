@@ -1,4 +1,4 @@
-# TDD 강의
+# 아샬님 TDD 강의
 
 Last Edited: Feb 15, 2019 8:59 PM
 
