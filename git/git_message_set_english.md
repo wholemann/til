@@ -7,5 +7,6 @@ mac에서 git 안내 메시지가 영어로 설정되는 경우가 있는데
 
 ```
 alias git="LANG=\"en_US.UTF-8\" git"
-Then execute source ~/.bashrc (or source ~/.zshrc) and voila :)
 ```
+
+그 후 source ~/.bashrc (or source ~/.zshrc)
