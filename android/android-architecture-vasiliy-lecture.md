@@ -1,6 +1,6 @@
 # Android Architecture
 
-Last Edited: Feb 18, 2019 5:07 PM
+Last Edited: Feb 21, 2019 6:07 PM
 Tags: Android
 
 Section 1
@@ -120,3 +120,46 @@ MVC View in ListView
 - ViewHolder가 더이상 필요 없음
 - messy한 어댑터를 방지할 수 있음
 - 특정 어댑터에만 종속되지 않고 어디서든 재사용 가능
+
+Warning 
+
+Be very careful with inheritance. It can be easy to abuse, which will lead to tight coupling, and maintenance issues.
+
+Extract functionality into base classes, only if you are confident that it is general and relevant to all subclasses.
+
+### 왜 안드로이드에서 MVC Views를 안 쓸까?
+
+Disadvantages of Using Android Views as MVC Views
+
+- Inherit thousands of lines of code
+- Inherit 100+ methods
+- Standalone hierarchy for each specific Android ViewGroup
+
+### Summary of MVC Basics
+
+- MVC views are classes that implement ViewMvc interface
+- Interactive MVC views implement ObservableViewMvc interface
+- Dedicated interfaces for specific MVC views and their Observers
+- MVC views can be nested
+- Activities are MVC controllers
+- Android Views are non-optimal implementation choice for MVC views
+
+Section 6
+
+### Relationship between fundamental dependency injection techniques and DIAP:
+
+- Different levels of abstraction (class vs application)
+- Fundamental techniques – class level Single Responsibility Principle
+- DIAP – application level Separation of Concerns
+- Implementations of DIAP use fundamental techniques under the hood
+
+### DI에 대한 미신?
+
+- 작은 크기의 앱에는 유용하지 않다?
+- 아니다. 모든 경우에 유용하다고 생각한다.
+
+### Activity에서 관심사의 분리 SoC
+
+- Retrofit API 호출 로직을 CompositionRoot 클래스에 옮겼다.
+- CompositionRoot는 Application 클래스 onCreate에서 생성.
+- Activity는 Retrofit API의 사용법을 모른다. 그냥 호출할 뿐.
