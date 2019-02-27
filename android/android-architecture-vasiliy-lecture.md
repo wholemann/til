@@ -163,3 +163,20 @@ Section 6
 - Retrofit API 호출 로직을 CompositionRoot 클래스에 옮겼다.
 - CompositionRoot는 Application 클래스 onCreate에서 생성.
 - Activity는 Retrofit API의 사용법을 모른다. 그냥 호출할 뿐.
+
+Section 7
+
+### Controller?
+
+- 얘네들은 application logic을 포함한다.
+- user interaction을 다루거나 system output을 view로 보내거나 user flow를 컨트롤한다.
+- 네트워크를 다루는 건 controller의 의무가 아니다.
+- 보통 controller는 데이터가 어디에서 오는지 전혀 몰라야한다.
+- data schema 또한 네트워크에 관련된 로직이므로 Controller 로직에 노출될 필요가 없다.
+
+### Use Case
+
+- application flow와 processes를 encapsulate한 오브젝트다.
+- 오직 하나의 single flow를 다룬다.(예를들어, 서버 리퀘스트 -> 데이터 변환 -> notify)
+- 계산, 블루투스 통신, 디바이스 상태 observe 등 다양한 케이스로 활용할 수 있다.
+
