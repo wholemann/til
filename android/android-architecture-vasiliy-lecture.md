@@ -173,10 +173,19 @@ Section 7
 - 네트워크를 다루는 건 controller의 의무가 아니다.
 - 보통 controller는 데이터가 어디에서 오는지 전혀 몰라야한다.
 - data schema 또한 네트워크에 관련된 로직이므로 Controller 로직에 노출될 필요가 없다.
+- 유닛테스트를 위해선 activity로부터 독립된 Controller가 필요하다.
+- Controller는 단일 클래스가 아닌 component(several classes)다.
+
 
 ### Use Case
 
 - application flow와 processes를 encapsulate한 오브젝트다.
 - 오직 하나의 single flow를 다룬다.(예를들어, 서버 리퀘스트 -> 데이터 변환 -> notify)
 - 계산, 블루투스 통신, 디바이스 상태 observe 등 다양한 케이스로 활용할 수 있다.
+- UseCase는 보통 Model이라고 한다.
 
+Section 8
+
+### Package Structure
+
+- 
