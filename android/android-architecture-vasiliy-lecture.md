@@ -76,7 +76,7 @@ MVx의 장점?
 
 - 흔히들 테스트 가능한 코드를 MVx 패턴의 장점이라고 함
 - 사실 테스트하기 좋은 코드는 부수적인 장점일 뿐
-- 가장 큰 장점은 UI 로직의 분리이겨 그게 MVx 패턴의 핵심 지침
+- 가장 큰 장점은 UI 로직의 분리이며 그게 MVx 패턴의 핵심 지침
 
 UI 로직의 의무
 
@@ -188,4 +188,27 @@ Section 8
 
 ### Package Structure
 
-- 
+Section 9
+
+### How to Add Nested MVC View
+
+- Declare an empty Android ViewGroup in the parent MVC view(usually-FrameLayout)
+- Instantiate a new MVC view that you want to nest in the parent
+- Add nested view's root Android View to parent's Android ViewGroup
+- Propagate nested view's API to parent's API(optional)
+
+### Benefits of Nested
+
+- Reusable UI elements
+- Clear boundary that can be further decoupled with interfaces
+- Dependencies of the nested views are hidden from the parent(thanks to dependency injection)
+- Composition, not inheritance
+
+Section 10
+
+### No code base can be 100% clean(실용주의를 추구할 것)
+
+- 뷰가 자체적으로 user interaction을 처리해야하는 경우가 있다.(햄버거 버튼에서 navi open)
+- 물론 이는 MVC 원칙에 어긋난다.
+- 그러나 그렇지 않으면 controller에 view의 구성이 노출되어 버린다.
+- __결국 완벽하게 순결한 MVC를 지키는 건 불가능하다.__
