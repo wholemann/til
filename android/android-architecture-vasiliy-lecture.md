@@ -212,3 +212,44 @@ Section 10
 - 물론 이는 MVC 원칙에 어긋난다.
 - 그러나 그렇지 않으면 controller에 view의 구성이 노출되어 버린다.
 - __결국 완벽하게 순결한 MVC를 지키는 건 불가능하다.__
+
+### How to Add Nested MVC View through Inheritance
+
+- Declare an empty Android ViewGroup in the parent MVC view(usually-FrameLayout)
+- Override setRootView(View) in parent's MVC view; new implementation should add the argument to parent's Android ViewGroup
+- Make the child MVC view extend the parent MVC view
+
+### Benefits of Nested MVC Views through Inheritance
+
+- Reusable UI elements
+- Very easy to reuse
+
+### Dangers of Nested MVC Views through Inheritance
+
+- Strong coupling between parent and child MVC views
+- Strong coupling between different child MVC views through parent MVC view
+- Limited reusability
+- All other dangers associated with inheritance
+
+### Summary
+
+- Favor composition over inheritance
+- Controller can be exposed to view's implementation details
+- __But views should know nothing about controllers__
+
+Section 12
+
+### Benefits of MVC
+
+- Decoupled UI logic
+- Multiple strategies for reuse of UI and application layer logic
+- Optional boost to unit testability by extraction of standalone controllers
+- No additional dependencies
+- Easy integration with dependency injection
+- Standardization of the codebase
+
+### Drawbacks of MVC
+
+- Initial learning curve
+- Unfamiliar
+- More code...?
