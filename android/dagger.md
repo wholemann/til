@@ -37,3 +37,12 @@
 - 정의된 의존관계는 어노테이션 프로세서를 통해 문제가 없는지 분석 절차를 거치며, 문제가 없다면 각 객체를 생성하는 코드 생성.
 - 의존 관계 검증과정과 필요한 코드를 생성하는 과정이 빌드 단계에서 일어나므로, 잘못된 의존관계로 인한 문제를 사전에 방지 가능.
 
+
+
+### SubComponent
+Dagger는 component 를 생성할 때 builder pattern을 사용합니다. @Component 의 경우 코드가 generate 되기 때문에 기본적으로 builder 역시 generate 됩니다. 그러나 @Subcomponent 는 @Component 클래스 안에서 코드가 생성될 때 @Subcomponent.Builder 가 붙은 interface 가 없으면 builder 가 자동으로 생성되지 않습니다. 그러므로 @Subcomponent.Builder 가 꼭 필요합니다. Builder 에는 build 하기 전에 모듈을 파라미터로 넣을 수 있습니다. 이는 멤버변수를 가지고 있는 모듈이 있을 때 유용하게 사용할 수 있습니다.
+참고로 create() 의 경우 자동으로 생성된 DaggerXXXComponent 클래스 안에 Builder().build() 를 리턴하도록 되어 있음.
+
+
+
+@Binds는 추상메서드를 이용해서 좀 더 간략하게 binding을 구현할 때 사용합니다.
