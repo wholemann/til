@@ -47,5 +47,7 @@ controller의 의무: '어떤' 데이터를 보여줄지 결정.
 
 ## MVC controller
 
-
-
+- consumes inputs and produces outputs (data, events and interactions)
+- manages its internal state
+- handles device state changes (connectivity ,location, orientation, etc.)
+- interacts with OS and other applications (taking pictures, setting alarms, etc.)
