@@ -14,6 +14,6 @@
 아래는 컨텐츠 제공자(Content Provider), ISP(Internet Service Provider), 컨텐츠 사용자의 입장에서 CDN 도입의 이점을 설명한 글이다.
 -https://netmanias.com/ko/post/blog/5350/cdn/the-advantage-of-the-cdn-content-delivery-network
 
-`결국 핵심은 3명 모두 비용 절감이기 때문에 쓰지 않을 이유가 없음`
+### `결국 핵심은 3명 모두 비용 절감이기 때문에 쓰지 않을 이유가 없음`
 
 
