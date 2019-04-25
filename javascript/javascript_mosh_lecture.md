@@ -215,3 +215,7 @@ Circle.apply({}, [1, 2, 3]);
 const another = new Circle(1);    // Circle.call({}, 1); 과 같다
 ```
 
+### Value vs Reference Types
+- 자바랑 비슷한 것 같다.
+- primitives는 값을 복사하고 objects는 reference(참조: 메모리주소)를 복사한다.
+
