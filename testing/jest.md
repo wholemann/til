@@ -10,3 +10,13 @@ NaN === NaN is false, but Object.is(NaN, NaN) is true
 +0 === -0 is true, but Object.is(+0, -0) is false
 -0 === +0 is true, but Object.is(-0, +0) is false
 ```
+
+### toThrow()
+- You must wrap the code in a function, otherwise the error will not be caught and the assertion will fail.
+```
+test('throws on octopus', () => {
+  expect(() => {
+    drinkFlavor('octopus');
+  }).toThrow();
+});
+```
