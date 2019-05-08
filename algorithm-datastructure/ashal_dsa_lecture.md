@@ -36,3 +36,22 @@
 
 ### Runner 기법
 
+### Binary Tree
+- 순회는 Stack, 재귀를 이용해서 해결할 수 있음.
+- Pre-order: Root, Left, Right
+- In-order: Left, Root, Right
+- Post-order: Left, Right, Root
+
+### Binary Search Tree
+- 이상적인 경우 n번만 검색하면 2^n-1 개의 노드를 검색할 수 있음.
+- Balanced Tree
+
+### Heap
+- Complete Binary Tree: 차근 차근 한 레벨씩 왼쪽부터 채워나가고 해당 레벨의 노드가 다 차면 다음 레벨로 넘어감.
+- Min-Heap: 가장 작은 노드를 루트.
+- Max-Heap: 가장 큰 노드를 루트.
+
+### Trie(Prefix Tree)
+- n개의 children. 알파벳 A-Z(26개).
+- 자동 완성 추천.
+
