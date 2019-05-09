@@ -219,3 +219,145 @@ const another = new Circle(1);    // Circle.call({}, 1); 과 같다
 - 자바랑 비슷한 것 같다.
 - primitives는 값을 복사하고 objects는 reference(참조: 메모리주소)를 복사한다.
 
+### Object.keys(obj) & Object.entries(obj) & if (key in obj)
+- Object의 경우 iterable 하지 않아서 for of를 쓸 수 없으나 Object.keys()를 쓰면 가능하다.
+- Object의 key값들을 Array로 리턴한다.
+```
+for (let key of Object.keys(circle))
+  console.log(key);
+```
+- Object.entries(obj)를 이용하면 key, value를 [['key', value],['key', value],...] 형태로 얻어올 수 있다.
+```
+for (let entry of Object.entries(circle))
+  console.log(entry);
+```
+- 'key' in obj 는 해당 key가 obj안에 존재하는지 검사할 수 있다.
+```
+if ('color' in circle) console.log('yes');
+```
+
+### Cloning an Object
+```
+const another = Object.assign({ color: 'yellow' }, circle);
+const another = { ...circle };
+```
+
+### String
+- primitive로 선언하더라도 '.'을 붙이는 순간 자바스크립트 엔진이 내부적으로 String Object로 wrapping 한다.
+- 그래서 다양한 메소드를 사용할 수 있는 것이다.
+```
+// String primitive
+const message = "This is my first message';
+
+// String object
+const another = new String('hi');
+```
+
+### Template Literals
+- \n, \' 같은 걸 쓸 필요가 없어진다.
+```
+const another = `This is my 
+'first' message`;
+
+const name = 'John';
+const another = 
+`Hi ${name} ${2 + 3},
+
+Thank you for joining my mailing list.
+`;
+```
+
+### Array
+- indexOf()는 parameter인 element가 없는 경우 -1이 return
+```
+numbers.indexOf(1) !== -1   // true
+numbers.includes(1)     // true
+```
+- find()는 array 안에 reference type을 찾기 위해 쓴다.
+```
+const courses = [
+  { id: 1, name: 'a' },
+  { id: 2, name: 'b' },
+];
+
+const course = courses.find(function(course) {
+  return course.name === 'a';
+});
+
+// ES6
+const course = courses.find(course => course.name === 'a');
+```
+
+#### Empty an Array
+```
+let numbers = [1, 2, 3, 4];
+let another = numbers;
+
+// Solution 1 (Recommend)
+numbers = [];   // another가 old numbers를 참조할 땐 GC가 작동하지 않음을 유의.
+
+// Solution 2 (Recommend & Mosh's Preference)
+numbers.length = 0;
+
+// Solution 3
+numbers.splice(0, numbers.length);
+
+// Solution 4   // Performance Cost High. 배열이 크면 클수록 pop()이 여러번 불리기 때문에.
+while (numbers.length > 0)
+  numbers.pop();
+```
+
+#### Combining and Slicing Arrays
+- concat할 때 primitive 타입은 새로운 배열에 복사가 일어나지만 reference 타입은 참조 복사가 일어난다.
+- 즉, 같은 Object를 가리키게 된다.
+```
+const first = [1, 2, 3];
+const second = [4, 5, 6];
+
+const combined = first.concat(second);
+
+const slice = combined.slice(2);
+
+console.log(combined);
+console.log(slice);
+```
+
+#### Spread Operator
+```
+const first = [1, 2, 3];
+const second = [4, 5, 6];
+
+const combined = [...first, 'a', ...second, 'b'];
+
+const copy = combined.slice();   // copy origin array to slice array
+const copy = [...combined];
+```
+
+#### Joining Arrays
+- url 만들 때 유용하게 쓸 수 있다. url엔 공백을 넣을 수 없으니
+```
+const message = 'This is my first message';
+const parts = message.split(' ');
+
+const combined = parts.join('-');
+```
+
+#### Mapping an Array
+```
+const numbers = [1, -1, 2, 3];
+
+const filtered = numbers.filter(n => n >= 0);
+
+// arrow function에선 {}가 code block을 나타내기 때문에
+// 반환값으로 object를 표현하기 위해선 ()로 감싸줘야한다.
+const items = filtered.map(n => ({ value: n }));
+
+console.log(items);
+
+// 여러줄로 chaining method call 하는게 더 깔끔하다.
+const items = numbers
+            .filter(n => n >= 0)
+            .map(n => ({ value: n}))
+            .filter(obj => obj.value > 1)
+            .map(obj => obj.value);
+```
