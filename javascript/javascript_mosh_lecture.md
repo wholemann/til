@@ -361,3 +361,243 @@ const items = numbers
             .filter(obj => obj.value > 1)
             .map(obj => obj.value);
 ```
+
+
+### Functions
+
+#### Function Declarations vs Expressions
+- 표현식은 정의하기 전에 호출할 수 없다.
+- 자바스크립트 엔진이 코드를 실행할 때 함수 선언식들을 코드 최상단으로 옮기기 때문에 선언식은 호출을 먼저 해도 상관 없다.(Hoisting)
+- 그러나 정확히는 이와 같이 작동한다.(https://developer.mozilla.org/ko/docs/Glossary/Hoisting)
+
+```
+// Function Declaration
+function walk() {
+  console.log('walk);
+}
+
+run();    // error: run is not defined
+
+// Anonymous Function Expression
+const run = function() {
+  console.log('run');
+};
+let move = run; //reference same function
+run();
+move9);
+```
+
+#### Arguments
+```
+function sum(a, b) {
+  return a + b; // 1 + undefined(default)
+}
+console.log(sum(1));
+
+function sum(a, b) {
+  console.log(arguments);   // arguments(Symbol.iterator);
+  for (let value of arguments)  //  arguments는 iterator를 가지고 있다.
+    total += value;
+  return total;
+}
+console.log(sum(1, 2, 3, 4, 5));
+```
+
+#### The Rest Operator
+- spread operator랑 형태는 같지만 function의 parameter로 쓰일 때 rest operator라 부른다.
+- rest operator는 function의 마지막 parameter로 선언되어야 한다.
+```
+function sum(...args) {
+  console.log(args);   // [1, 2, 3, 4, 5, 10]
+  return args.reduce((a, b) => a + b);    // 25
+}
+console.log(sum(1, 2, 3, 4, 5, 10));
+
+function sum(discount, ...prices) {
+  const total = prices.reduce((a, b) => a + b);
+  return total * (1 - discount);
+}
+
+console.log(sum(0.1, 20, 30));
+```
+
+#### Default Parameters
+- default parameter 설정 안 해주면 undefined가 된다.
+```
+function interest(principal, rate = 3.5, years = 5) {
+  return principal * rate / 100 * years;
+}
+
+console.log(interest(10000));
+```
+
+#### Getters and Setters
+```
+const person = {
+  firstName: 'Mosh',
+  lastName: 'Hamedani'
+  get fullName() {
+    return `${person.firstName} ${person.lastName}`;
+  },
+  set fullName(value) {
+    const parts = value.split(' ');
+    this.firstName = parts[0];
+    this.lastName = parts[1];
+  }
+};
+person.fullName = 'John Smith';
+
+console.log(person);
+```
+
+#### Try and Catch
+```
+const person = {
+  firstName: 'Mosh',
+  lastName: 'Hamedani'
+  get fullName() {
+    return `${person.firstName} ${person.lastName}`;
+  },
+  set fullName(value) {
+    if (typeof value !== 'string')
+      throw new Error('Value is not a string.');
+
+    const parts = value.split(' ');
+    if (parts.length !== 2)
+      throw new Error('Enter a first and last name.');
+    this.firstName = parts[0];
+    this.lastName = parts[1];
+  }
+};
+
+try {
+  person.fullName = null;
+}
+catch (e) {
+  console.log(e);
+}
+
+console.log(person);
+```
+
+#### Local vs Global Scope
+- local 변수는 global 변수보다 block 내에서 우선순위가 높다.
+- global 변수나 상수를 선언하는 건 bad practice다.
+```
+const color = 'red';
+function start() {
+  const message = 'hi';
+  const color = 'blue';
+  console.log(color);   // blue
+
+  if (true) {
+    const another = 'bye';
+  }
+
+  for (let i = 0; i < 5; i++) {
+
+  }
+  console.log(i);   // error
+}
+console.log(message);   // message is not defined
+```
+
+#### Let vs Var
+- let, const: block-scoped.
+- var: function-scoped.
+- 암튼 var 쓰지마라.
+```
+function start() {
+  for (var i = 0; i < 5; i++)
+    console.log(i);
+
+  console.log(i);   // 0, 1, 2, 3, 4
+}
+```
+
+#### The this Keyword
+- this란 현재 실행하고 있는 function의 object를 가리킨다.
+```
+// method -> obj
+// function -> global (window, global)
+
+const video = {
+  title: 'a',
+  play() {
+    console.log(this);
+  }
+};
+
+// stop method를 video object에 추가
+video.stop = function() {
+  console.log(this);
+};
+video.play();
+
+
+function Video(title) {
+  // 여기서 this는 new로 인해 생성된 {}를 말한다.
+  this.title = title;
+  console.log(this);
+}
+
+const v = new Video('b'); // new는 empty object {} 를 만든다.
+```
+- 아래에서 forEach 내부의 call back function은 regular function으로 this는 global object를 참조한다.
+```
+const video = {
+  title: 'a',
+  tags: ['a', 'b', 'c'],
+  showTags() {
+    this.tags.forEach(function(tag) {
+      console.log(this, tag); // this: global object
+    }, this); // this: video object
+  }
+};
+
+video.showTags();
+
+
+// 아래와 같이 self를 이용한 방법은 추천하지 않음.
+const video = {
+  title: 'a',
+  tags: ['a', 'b', 'c'],
+  showTags() {
+    const self = this;
+    this.tags.forEach(function(tag) {
+      console.log(self.title, tag);
+    });
+  }
+};
+
+function playVideo() {
+  console.log(this);
+}
+
+playVideo.call({ name: 'Mosh' });   // this가 call에 전달한 parameter를 참조
+playVideo.apply({ name: 'Mosh' }, [1, 2]);    // array 전달 가능
+playVideo();    // this는 global object
+
+// bind 메소드를 이용. 예전 방식이라 코드 가독성이 좋지 않지만 legacy에선 많이 볼 수 있음.
+const video = {
+  title: 'a',
+  tags: ['a', 'b', 'c'],
+  showTags() {
+    this.tags.forEach(function(tag) {
+      console.log(this.title, tag);
+    }.bind(this));
+  }
+};
+
+// arrow function을 이용. 이게 현대적 방법.
+// arrow function에선 this는 containing function(showTags())의 this를 그대로 참조한다.
+const video = {
+  title: 'a',
+  tags: ['a', 'b', 'c'],
+  showTags() {
+    this.tags.forEach(tag => {
+      console.log(this.title, tag);
+    });
+  }
+};
+```
