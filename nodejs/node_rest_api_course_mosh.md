@@ -210,4 +210,118 @@ const result = validateCourse(req.body);
 const { error } = validateCourse(req.body); // result.error
 ```
 
-#### Handling HTTP Delete Requests
+#### Middleware
+- 미들웨어란? 요청에 대한 응답 과정 중간에 껴서 어떠한 동작을 해주는 프로그램이다.
+- 미들웨어에서 클라이언트의 요청에 대한 응답을 할 수도 있고, 그 다음 미들웨어로 넘길 수도 있다.
+- Request Processing Pipeline
+  - Request -> [ json() -> route() ] -> Response
+- Custom Middleware function도 만들 수 있다.
+- 해당 미들웨어에서 request-response cycle 을 종료하지 않는다면 반드시 next()를 해줘야 한다.
+- middleware function은 req, res, next를 인자로 갖는다.
+```
+function log (req, res, next) {
+  console.log('Logging...');
+  next();   // pass to next middleware function
+}
+```
+
+
+#### Built-in Middleware
+- express.urlencoded(): x-www-form-urlencoded으로 전송된 payload를 해석할 때 필요하다.
+- express.static(''): ''안에 지정된 디렉토리의 정적 파일을 라우팅 해준다. route url로 바로 접근 가능.
+
+#### Environments
+- 개발 환경일 때만 or 프로덕션 환경일 때만 사용하고 싶은 미들웨어가 있을 수 있다. ex) Morgan과 같은 로깅 처리.
+- app.get('env')은 process.env.NODE_ENV를 얻어올 수 있다. process.env.NODE_ENV가 설정되지 않았다면 디폴트는 development다.
+- development, staging, production 머신 별로 구분해서 동작하도록 할 수 있다.
+
+#### Configuration
+- npm i config 를 이용하면 json파일을 이용해서 config 세팅을 관리할 수 있다.
+- DB 패스워드, 메일서버 패스워드 등 외부로 노출되면 안 되는 사항을 json파일에 저장하고 레포지터리에 공개하면 문제가 생긴다.
+- custom-environment-variables.json을 생성하고 터미널에서 외부 환경변수로 주입해서 처리한다.
+```
+// 다른 어플리케이션의 환경 변수 설정과 충돌이 일어날 수 있기 때문에 prefix를 붙여서 지정한다.
+$ export app_password=1234
+```
+
+#### Debugging
+- 개발 중에 db에 관련된 로그만 보고 싶을 수도 있고 다른 부분에 관련된 로그만 보고 싶을 수도 있다.
+- 그럴 때 debug package를 쓰면 외부 환경 변수 주입으로 분기 처리가 가능하다.
+```
+const startupDebugger = require('debug')('app:startup');
+const dbDebugger = require('debug')('app:db');
+
+$ DEBUG=app:* nodemon index.js
+$ DEBUG=app:db nodemon index.js
+```
+
+#### Templating Engines
+- html을 클라이언트에 return 해야될 때가 있다.
+- 그럴 때 쓰는 것이 templating engine이다. 대표적으로 Pug, Mustache, EJS.
+
+### Asynchronous JavaScript
+
+#### Synchronous vs Asynchronous
+- Asynchronous는 concurrent, multithread를 의미하지 않는다.
+- 식당 종업원이 한명이어도 Asynchronous하게 일을 처리할 수 있음을 생각해보면 된다.
+- Asynchronous 처리엔 크게 3가지 방법이 있다. Callback, Promise, Async/Await.
+
+#### Callback Hell
+- 콜백 함수 부분을 Anonymous Function에서 Named Function 으로 바꿔서 해결이 어느 정도 된다. 적어도 콜백 헬은 없으나 읽기 좋진 않다.
+
+
+#### Promise
+- Promise? Holds the eventual result of an asynchronous operation.
+- 즉, 비동기 조작의 최종 완료나 실패를 표현해주는 객체이다. Promise에 결과값이나 에러가 담긴다.
+- 총 3가지 state를 갖는다.
+- Pending -> Fulfilled (value)
+- Pending -> Rejected (error)
+
+#### Creating Settled Promises
+- unit test시에 쓰기 좋다. 이미 resolve 됐거나 reject 됐다고 설정한다.
+```
+const p = Promise.resolve({ id: 1 });
+
+// 에러 call stack을 보기 위해서라도 Error obect를 쓰는게 best practice
+const p = Promise.reject(new Error('reason for rejection...'));
+p.catch(error => console.log(error));
+```
+
+#### Running Promises in Parallel
+- Promise.all은 프로미스가 담겨 있는 배열 등의 이터러블을 인자로 전달 받는다.
+- 전달받은 모든 프로미스를 병렬로 처리한다. 이때 모든 프라미스의 처리가 종료될 때까지 기다린 후 아래와 모든 처리 결과를 resolve 또는 reject한다.
+- 첫번째 프로미스가 가장 나중에 처리되어도 Promise.all 메소드가 반환하는 프로미스는 첫번째 프로미스가 resolve한 처리 결과부터 차례대로 배열에 담아 그 배열을 resolve하는 새로운 프로미스를 반환한다. 즉, 처리 순서가 보장된다.
+- 프로미스의 처리가 하나라도 실패하면 가장 먼저 실패한 프로미스가 reject한 에러를 reject하는 새로운 프로미스를 즉시 반환한다.
+- Promise.all 메소드는 전달 받은 이터러블의 요소가 프라미스가 아닌 경우, Promise.resolve 메소드를 통해 프라미스로 래핑된다.
+- Promise.race 메소드는 Promise.all 메소드와 동일하게 프로미스가 담겨 있는 배열 등의 이터러블을 인자로 전달 받는다. 
+- Promise.race 메소드는 Promise.all 메소드처럼 모든 프라미스를 병렬 처리하는 것이 아니라 가장 먼저 처리된 프라미스가 resolve한 처리 결과를 resolve하는 새로운 프라미스를 반환한다.
+
+#### Async and Await
+- Asynchronous한 코드를 Synchronous한 코드처럼 보이게 만들어준다.
+- await 키워드는 async 함수에서만 유효하다.
+- Promise와는 다르게 catch를 쓰지 않고 try catch block을 쓴다.
+
+
+### CRUD Operations Using Mongoose
+
+#### Comparison Query Operators
+- eq, ne, gt, gte, lt, lte, in, nin
+- 오브젝트 안에서 비교를 표현하기 위해서 아래와 같이 처리한다.
+```
+const courses = await Course
+  .find({ price: { $gt: 10 } })
+```
+
+#### Validation
+- validate()는 void promise를 리턴한다. boolean을 주면 이상적일텐데 디자인 결함인 듯.
+- required는 Mongoose에서만 의미있는 처리이다. MongoDB는 Mysql과 같이 validation을 DB level에서 신경쓰지 않는다.
+
+#### Built-in Validators
+- arrow function은 사용할 수 없는 이유 : arrow function은 자신만의 this가 없기 때문에 해당 function을 호출하는
+mongoose의 function의 context를 따라갈 것이다.
+```
+price: {
+    type: Number,
+    required: function() { return this.isPublished; }
+  }
+```
