@@ -300,6 +300,7 @@ p.catch(error => console.log(error));
 - Asynchronous한 코드를 Synchronous한 코드처럼 보이게 만들어준다.
 - await 키워드는 async 함수에서만 유효하다.
 - Promise와는 다르게 catch를 쓰지 않고 try catch block을 쓴다.
+- async function의 반환값은 암묵적으로 Promise.resolve로 감싸진다.
 
 
 ### CRUD Operations Using Mongoose
@@ -324,4 +325,78 @@ price: {
     type: Number,
     required: function() { return this.isPublished; }
   }
+```
+
+#### Custom Validators
+- empty array가 기본적으로 설정되기 때문에 tags를 설정하지 않으면 길이가 0으로 나온다.
+- null일 경우는 체크가 되지 않기 때문에 아래와 같은 조건식으로 표현해줘야 한다.
+```
+tags: {
+    type: Array,
+    validate: {
+      validator: function(v) {
+        return v && v.length > 0;
+      },
+      message: 'A course should have at least on tag'
+    }
+  }
+```
+
+#### Asynchronous Validators
+- 비동기 처리에 대해서 validator가 필요할 때 async validator를 지원한다.
+- isAsync:true, callback을 사용하는 방식은 deprecated.
+- 현재는 Promise가 권장되는 듯 하다.
+```
+validate: {
+      isAsync: true,
+      validator: function(v, callback) {
+        setTimeout(() => {
+          const result = v && v.length > 0;
+          callback(result);
+        }, 4000);
+      },
+      message: 'A course should have at least on tag'
+    }
+
+// Promise 사용
+validate: {
+      validator: function(v) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            const result = v && v.length > 0;
+            resolve(result);
+          }, 4000);
+        })
+      },
+      message: 'A course should have at least on tag'
+    }
+```
+
+#### SchemaType Options
+- String: lowercase, uppercase, trim
+- get, set은 로직이 실행되는 시점에 적용된다.
+```
+price: {
+    type: Number,
+    required: function() { return this.isPublished; },
+    min: 10,
+    max: 200,
+    get: v => Math.round(v),
+    set: v => Math.round(v)
+  }
+
+// db에 저장된 값이 15.8이라도 로직 실행 후엔 16으로 표현됨.
+```
+
+#### Error handling middleware
+- 강의엔 나오지 않지만 MongoDB 규칙에 맞는 24자리 ID가 아닌 경우 예외처리는 router 미들웨에서 처리한다.
+- 이것 때문에 개고생했다. 강의에선 이러한 예외에 대해선 언급이 없었다.
+```
+router.use('/:id', (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).send('Invalid ID.');
+  }
+
+  next();
+});
 ```
