@@ -400,3 +400,126 @@ router.use('/:id', (req, res, next) => {
   next();
 });
 ```
+
+### Mongoose- Modeling Relationships between Connected Data
+
+#### Modeling Relationships
+- 기본적으로 MongoDB에서 document간 relationship은 존재하지 않는다.
+- 연관된 document의 id가 invalid하더라도 MongoDB는 이러한 부분을 신경쓰지 않는다.
+- Trade off between query performance vs consistency
+```
+// Using References (Normalization) : Consistency 측면에서 장점
+// author의 name을 수정할 경우 한번만 수정하면 되기 때문에 consistency가 깨질 확률이 없다.
+// 대신 course를 불러올 때마다 author에 대한 추가적인 query가 필요한 만큼 성능상에선 단점.
+
+let author = {
+  name: 'Mosh'
+}
+
+let course = {
+  author: 'id'
+}
+
+// Using Embedded Documents (Denormalization) : Performance 측면에서 장점
+// course 안에 author가 있기 때문에 author를 위한 추가적인 query가 필요 없다.
+// 대신 author의 name을 수정했을 때 모든 course documents의 name 수정을 실패했을 경우
+// consistency가 깨질 수 있다.
+
+let course = {
+  author: {
+    name: 'Mosh'
+  }
+}
+// Hybrid
+// 필요한 일부 property만 embedded해서 성능의 손실을 줄인다.
+
+let author = {
+  name: 'Mosh'
+  // 50 other properties
+}
+
+let course = {
+  author: {
+    id: 'ref',
+    name: 'Mosh'
+  }
+}
+```
+
+#### Transactions
+- MongoDB에 transactions은 없다. 대신 two phase commit이란게 있는데 공식 문서를 참고하면 된다.
+- Fawn package를 이용하면 transaction 처리가 가능하다.
+```
+  rental = await rental.save();
+
+  movie.numberInStock--;
+  movie.save();
+
+  // 위의 코드는 transaction 처리가 필요하다. rental 생성에서 에러가 났을 시 뒤에 처리가 진행되면 안됨.
+
+  try {
+    new Fawn.Task()
+      .save('rentals', rental)
+      .update('movies', { _id: movie._id }, {
+        $inc: { numberInStock: -1 }
+      })
+      .run();
+
+    res.send(rental);
+  }
+  catch (ex) {
+    res.status(500).send('Something failed.');
+  }
+```
+
+#### ObjectID
+- 총 12 bytes 로 표현된다.
+- 4 bytes: timestamp
+- 3 bytes: machine identifier
+- 2 bytes: process identifier
+- 3 bytes: counter
+- 100%는 아니지만 unique함을 보장한다.
+- ObjectID는 MongoDB에 실제로 저장되기 전에 Driver가 발급하기 때문에 사실 아래와 같은 로직은 필요가 없다.
+```
+let movie = new Movie({
+  ...
+});
+movie = await movie.save();
+
+// 변경
+const movie = new Movie({
+  ...
+});
+await movie.save();
+```
+
+### Authentication and Authorization
+- Authentication: 자신이 누구라고 주장하는 사람을 확인하는 절차
+- Authorization: 해당 유저가 수행하는 어떤 행위에 대해 권한을 가지고 있는지 확인하는 절차
+
+#### Using Lodash
+- Object를 다룰 때 필요한 utility들이 많다.
+```
+res.send({
+  name: user.name;
+  email: user.email;
+});
+
+
+res.send(_pick(user, ['name', 'email']));
+```
+
+#### Hashing Passwords
+- Salt를 사용하자.
+
+#### Authenticating Users
+- 404를 보내지 않고 400(Bad Request)라고 보낸다. 제대로 data가 통과됐다는 사실도 숨기기 위함인 듯.
+
+#### JSON Web Tokens
+- 서버에서 주는 운전면허증 같은 것이다. 다음에 API 콜할 때 보여줘야 함.
+- JWT는 세가지 부분으로 볼 수 있다. Header, Payload, Verify Signature.
+
+#### Logging Out Users
+- 클라이언트에 발급된 token을 삭제하면 된다.
+- 절대로 database에 토큰을 저장하지 마라. 보안적으로 매우 위험하다. 여권을 한 곳에 모아놓은 꼴.
+
