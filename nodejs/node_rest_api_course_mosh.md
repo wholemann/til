@@ -607,3 +607,44 @@ process.on('uncaughtException', (ex) => {
   winston.error(ex.message);
 });
 ```
+
+#### Unhandled Promise Rejections
+- best practice는 process를 종료하는 것이다.
+- 
+```
+process.on('unhandledRejection', (ex) => {
+  winston.error(ex.message);
+  process.exit(1);
+});
+
+// winston이 unhandled promise reject를 catch하지 못하기 때문에
+// 아래와 같은 방법으로 우회해서 처리할 수 있음.
+
+winston.exceptions.handle(
+  new winston.transports.File({ filename: 'uncaughtExceptions.log'}));
+
+// 비동기 에러를 catch하여 winston의 exception 처리를 이용.
+// winston은 로깅 후 알아서 process 종료함.
+process.on('unhandledRejection', (ex) => {
+  throw ex;
+});
+```
+
+### Unit Testing
+
+#### Benefits of Automated Testing
+- Test your code frequently, in less time
+- Catch bugs before deploying
+- Deploy with confidence
+- Refactor with confidence
+- Focus more on the quality
+
+#### Types of Tests
+- Unit Test : without `external` dependencies
+- Integration : with `external` dependencies
+- End-to-end : Drives an application through its UI
+
+#### Test Pyramid
+- Favour unit tests to e2e tests.
+- Cover unit test gaps with integration tests.
+- Use end-to-end tests sparingly.
