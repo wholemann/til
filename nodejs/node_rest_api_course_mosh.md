@@ -523,3 +523,87 @@ res.send(_pick(user, ['name', 'email']));
 - 클라이언트에 발급된 token을 삭제하면 된다.
 - 절대로 database에 토큰을 저장하지 마라. 보안적으로 매우 위험하다. 여권을 한 곳에 모아놓은 꼴.
 
+
+### Handling and Logging Errors
+
+#### Handling Rejected Promises
+```
+// error.js
+module.exports = function(err, req, res, next) {
+  res.status(500).send('Something failed.');
+}
+
+// api
+
+router.get('/', async (req, res, next) => {
+  try {
+    // something execute...
+  }
+  catch (ex) {
+    next(ex);
+  }
+});
+
+
+// index.js
+...
+...
+app.use('/api/auth', auth);
+app.use(error);   // 미들웨어 마지막 라인에 삽입
+```
+
+#### Removing Try Catch Blocks
+- 모든 라우터 call마다 try catch 블럭을 감싸기에는 비효율적이다.
+- 아래와 같이 추상화를 할 수 있는데 reference function인 handler가 express에 의해 호출 될 때 req, res의 인자가 필요한데 이는 runtime에 express에 의해 function이 call 되면서 req, res 또한 pass 된다.
+- 따라서 아래와 같이 async function을 return하는 형태로 만들어줘야 정상 작동한다.
+```
+// 비효율적
+
+router.get('/', async (req, res, next) => {
+  try {
+    // something execute...
+  }
+  catch (ex) {
+    next(ex);
+  }
+});
+
+// async.js(middleware)
+
+module.exports = function asyncMiddleware(handler) {
+  return async (req, res, next) => {
+    try {
+      await handler(req, res);
+    }
+    catch (ex) {
+      next(ex);
+    }
+  };
+}
+
+// api
+
+router.get('/', asyncMiddleware(async (req, res) => {
+  const genres = await Genre.find().sort('name');
+  res.send(genres);
+}));
+
+```
+
+#### Express Async Errors
+- 매번 직접 만든 asyncMiddleware function을 호출하는 건 noisy하다.
+- 이를 대신 해주는 package를 인스톨해서 해결한다.
+```
+$ npm i express-async-errors
+
+require('express-async-errors');    // 이거면 끝.
+```
+
+#### Uncaught Exception
+- express가 아닌 프로세스 레벨에서 exception이 발생할 경우 event emitter로 catch해줘야 한다.
+```
+process.on('uncaughtException', (ex) => {
+  console.log('WE GOT AN UNCAUGHT EXCEPTION');
+  winston.error(ex.message);
+});
+```
