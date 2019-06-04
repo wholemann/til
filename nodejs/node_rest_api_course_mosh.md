@@ -648,3 +648,33 @@ process.on('unhandledRejection', (ex) => {
 - Favour unit tests to e2e tests.
 - Cover unit test gaps with integration tests.
 - Use end-to-end tests sparingly.
+
+#### Testing Arrays
+- general과 specific 사이에서 right balance를 찾아야 된다.
+```
+it('should return supported currencies', () => {
+    const result = lib.getCurrencies();
+
+    // Too general
+    // 너무 통과가 쉽거나 의미가 없는 테스트.
+    expect(result).toBeDefined();
+    expect(result).not.toBeNull();
+
+    // Too specific
+    // 정렬이 바뀐다면 쉽게 깨짐.
+    expect(result[0]).toBe('USD');
+    expect(result[1]).toBe('AUD');
+    expect(result[2]).toBe('EUR');
+    // 길이가 변하면 쉽게 깨짐.
+    expect(result.length).toBe(3);
+
+    // Proper way
+    expect(result).toContain('USD');
+    expect(result).toContain('AUD');
+    expect(result).toContain('EUR');
+
+    // Ideal way
+    // 순서를 고려하지 않고 해당 element가 포함됐는지 테스트.
+    expect(result).toEqual(expect.arrayContaining(['EUR', 'USD', 'AUD']));
+  });
+```
