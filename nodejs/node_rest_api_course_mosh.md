@@ -656,16 +656,16 @@ it('should return supported currencies', () => {
     const result = lib.getCurrencies();
 
     // Too general
-    // 너무 통과가 쉽거나 의미가 없는 테스트.
+    // 너무 통과가 쉽거나 의미가 없는 테스트
     expect(result).toBeDefined();
     expect(result).not.toBeNull();
 
     // Too specific
-    // 정렬이 바뀐다면 쉽게 깨짐.
+    // 정렬이 바뀐다면 쉽게 깨짐
     expect(result[0]).toBe('USD');
     expect(result[1]).toBe('AUD');
     expect(result[2]).toBe('EUR');
-    // 길이가 변하면 쉽게 깨짐.
+    // 길이가 변하면 쉽게 깨짐
     expect(result.length).toBe(3);
 
     // Proper way
@@ -674,7 +674,22 @@ it('should return supported currencies', () => {
     expect(result).toContain('EUR');
 
     // Ideal way
-    // 순서를 고려하지 않고 해당 element가 포함됐는지 테스트.
+    // 순서를 고려하지 않고 해당 element가 포함됐는지 테스트
     expect(result).toEqual(expect.arrayContaining(['EUR', 'USD', 'AUD']));
   });
+```
+
+#### Testing Objects
+```
+describe('getProduct', () => {
+  it('should return the product with the given id', () => {
+    const result = lib.getProduct(1);
+    // Too specific
+    expect(result).toEqual({ id: 1, price: 10 });
+    
+    // 해당 요소를 가지고 있는지 테스트
+    expect(result).toMatchObject({ id: 1, price: 10 });
+    expect(result).toHaveProperty('id', 1);
+  });
+});
 ```
