@@ -693,3 +693,23 @@ describe('getProduct', () => {
   });
 });
 ```
+
+#### Jest Mock Functions
+```
+let mailSent = false;
+mail.send = function(email, message) {
+  mailSent = true;
+}
+
+lib.notifyCustomer({ customerId: 1 });
+
+expect(mailSent).toBe(true);
+
+// use jest mock function
+
+mail.send = jest.fn();
+
+lib.notifyCustomer({ customerId: 1 });
+
+expect(mailSent).toHaveBeenCalled(true);
+```
