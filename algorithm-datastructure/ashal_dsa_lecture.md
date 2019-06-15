@@ -55,3 +55,31 @@
 - n개의 children. 알파벳 A-Z(26개).
 - 자동 완성 추천.
 
+### Hash Table
+- Hash Algorithm: key(String)을 Array의 index(0~n-1)로 바꿔주는 것.
+
+### Hash Collision
+- 주어진 데이터 량이 N보다 큼. 비둘기집 원리에 의해 피할 수 없음.
+- 공간의 여유가 있지만 변환값이 같음.
+- lose lose, djb2, sdbm.
+
+### Separate Chaining & Open Addressing
+- 일단 좋은 Hash function을 적용한 뒤에 그럼에도 충돌이 일어날 경우 아래 2가지를 고려한다.
+#### Chaining: Array + List(Linked List)
+- 각 Node 끼리 string 비교가 일어나기 때문에 되도록 충돌이 적도록 Hash function을 만든 뒤 적용.
+#### Open Addressing
+- Open Address: 전체 데이터량 <= Array 크기
+- 충돌이 일어나지 않는 애들도 옆으로 밀려나는 단점이 있음.
+
+### Set
+- 요소 모음(Collection)
+- 순서 없음(순서를 보장하지 않는다)
+- 중복 없음(유일하다)
+- Array, List로 구현. 추가할 때 존재 여부 검사(정렬 해준 뒤).
+- HashTable, Tree.(존재 여부 검사의 속도를 향상 시킬 수 있음).
+
+#### Set Operations
+- 합집합(union)
+- 차집합(difference): 중복되는 부분을 제거.
+- 교집합(intersection): 겹치는 걸 찾아냄.
+- 부분집합(subset)
