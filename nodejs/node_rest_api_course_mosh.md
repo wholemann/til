@@ -714,3 +714,9 @@ lib.notifyCustomer({ customerId: 1 });
 expect(mailSent).toHaveBeenCalled(true);
 ```
 
+### TDD
+
+Benefits of TDD
+- Testable Source Code
+- Full Coverage by Tests
+- Simpler Implementation
