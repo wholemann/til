@@ -83,3 +83,24 @@
 - 차집합(difference): 중복되는 부분을 제거.
 - 교집합(intersection): 겹치는 걸 찾아냄.
 - 부분집합(subset)
+
+### Graph
+구성요소
+- Node/Vertex
+- Edge
+- Tree의 일반화된 형태가 Graph
+
+#### Cycle Graph(순환)
+
+순환 Cycle    Acyclic
+방향 Directed   Undirected
+가중치 Weighted   Unweighted
+
+특수한 형태 : DAG(Directed Acyclic Graph)
+
+#### Graph의 구현
+
+1. Adjacency List(인접 리스트)
+2. Adjacency Matrix(인접 행렬)
+3. Incidence Matrix
+
