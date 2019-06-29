@@ -80,3 +80,66 @@ ex) SNS 포스트의 10초 전. 10분 전. (TIMESTAMP 연산. 서버 입장에�
 - 역정규화란 개념이 먼저 있던게 아니라 성능 향상을 위해 조치를 취하다 보니 이러한 이름을 붙이게 된 것.
 
 과제: 전체적으로 필요한 컬럼 추가. 배송 회사 테이블, 상품 이미지 테이블. 개인 프로젝트 ERD.
+
+
+이미지 저장법
+user_id.jpg
+fastbook.com/images/0001.jpg
+
+url로 저장하면 나중에 서버 확장하기 쉬움
+img1.fastbook.com
+img2.fastbook.com
+
+브라우저에 캐싱되기 때문에 파일명이 같아서 이미지가 바뀌어도 변경이 안 될 수 있음.
+그래서 보통 갱신을 위해 (user_id).jpg?20190629 과 같은 query string을 붙여서 저장한다.
+
+상의 0001 티 0002 반팔 0009 어린이 0008 반팔 0010
+
+gooods에 category_tag 개념으로 #0001 #0002 #0009 #0008 #0010 을 넣어서
+
+복수의 카테고리에 해당된 상품 N:M 관계를 해결하며 중계 테이블도 없어도 됨.
+
+검색은 0010을 해버리면 반팔인 상품 모두 검색 가능.
+
+user = 1천만
+post = 10억개
+
+SELECT * FROM post WHERE LIMIT 100000, 100
+
+LIMIT 연산은 100100개를 가져와서 10만개 버리고 100개 보여줌.
+
+SELECT * FROM post WHERE id > 100000 LIMIT 100
+절대값 10만으로 가져오면 중간에 삭제된 경우 정확한 처리가 안 됨.
+
+상대값 을 따로 컬럼으로 관리하면 해결 가능. but, 매번 update를 해줘야 함.
+
+과연 10만번째 페이지를 보는 경우가 많을 것인가? 글삭제가 많을 것인가? 는 고민해봐야 됨.
+
+사실은 이렇게 규모가 커지면 페이징 처리를 안 해도 되도록 UX를 유도함.
+
+INDEX?
+데이터의 목차 생성
+
+쿼리 튜닝
+SELECT * FROM post WHERE user_id = 10 ORDER BY id DESC INDEX(user_id, id)
+
+쿼리 튜닝은 검색의 범위를 좁히는 방향으로 해야한다.
+-> WHERE location=서울 AND sex=FEMALE (O)
+sex=FEMALE AND location=서울(X) sex의 모수가 크기 때문.
+
+분포 비율을 생각하며 짜야 됨.
+
+INDEX(location, sex) 를 해줘야 됨.
+쿼리를 location부터 날리기 때문.
+
+근데 사실 sex는 인덱스 걸어봤자 50%라 효용이 없음.
+EXPLAIN(실행계획 분석)을 통해 분석해보고 결정하는게 좋음.
+
+
+컬럼 배치 순서도 속도에 관련이 있음.
+id, content, created_date, updated_date, user_id ... 면 3칸을 점프해야됨.
+id, user_id, content, created_date,...
+
+index를 걸지 않은 컬럼의 경우 WHERE 절에서 컬럼끼리 거리가 가까울수록 빠름.
+
+
