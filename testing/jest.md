@@ -20,3 +20,15 @@ test('throws on octopus', () => {
   }).toThrow();
 });
 ```
+
+### Configuring Jest
+- Jest는 json 파일로 변경을 감지하여 --watchAll 모드일 때 테스트를 re-run 해버린다.
+- 무시하고 싶은 파일이나 디렉토리가 있다면 아래와 같이 package.json에 작성해야한다.
+
+```
+// package.json
+
+jest: {
+  "watchPathIgnorePatterns": [ "/path/file" ]
+}
+```
