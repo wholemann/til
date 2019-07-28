@@ -16,3 +16,12 @@ Array.from({length: 5}, (v, i) => i);
 
 
 https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Einsatz_von_Arrow-Funktionen_und_Array.from
+
+
+### Array.includes()
+
+Array.indexOf(), Array.includes() 는 값이 아닌 참조로 비교하기 때문에 Array 안에 Object를 찾을 수 없다.
+```
+[{a: 1}, {a: 2}].includes({a: 1});
+// false, because {a: 1} is a new object
+```
