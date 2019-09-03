@@ -316,7 +316,7 @@ $ docker-compose up -d --build
 ```
 docker container run [options] -v 호스트_디렉터리:컨테이너_디렉터리 레포지토리명[:태그] [명령] [명령인자]
 
-$ docker container run -v ${PWD}:/workspace gihyodocker/imagemagick:latest convert -size 100x100 xc:#000000 /workspace/gihyo.jpg
+$ docker container run -v ${PWD}:/workspace gihyodockedocker r/imagemagick:latest convert -size 100x100 xc:#000000 /workspace/gihyo.jpg
 ```
 
 ### 데이터 볼륨 컨테이너
@@ -327,3 +327,14 @@ $ docker container run -v ${PWD}:/workspace gihyodocker/imagemagick:latest conve
 - 컨테이너가 호스트 볼륨 디렉터리를 알 필요가 없음.
 - 애플리케이션과 데이터의 결합이 느슨해짐.
 
+#### 데이터 익스포트 및 복원
+
+- 데이터 볼륨 컨테이너에서 사용하던 데이터를 다른 도커 호스트로 이전해야 할 경우 데이터 볼륨 컨테이너에서 데이터를 압축 파일로 익스포트.
+- 그 파일을 호스트로 꺼내서 새로운 데이터 볼륨 컨테이너 안에 압축 파일을 풀어주면 됨.
+
+### 도커 스웜
+
+- 여러 도커 호스트를 클러스터로 묶어주는 컨테이너 오케스트레이션 도구.
+- 컨테이너 오케스트레이션 도구: 도커 호스트에 어떤 컨테이너를 배치할 것인지, 서로 다른 호스트에 위치한 컨테이너 간의 통신은 어떻게 제어하는 지 등의 조율을 해주는 것.
+
+#### 
