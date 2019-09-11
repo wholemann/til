@@ -52,3 +52,68 @@ db.inTransaction {
     it.delete("members", "first_name = ?", arrayOf("도연"))
 }
 ```
+
+### object
+
+- 싱글톤 객체.
+- 다른 class를 상속하거나 interface를 구현 가능.
+
+### companion object
+
+- java static과 같은 효과.
+- class 내부 private로 접근해야 하는 factory method 구현 시 유용함.
+```
+// 생성자의 접근 제한자가 private이므로 외부에선 접근할 수 없음.
+class User private constructor(val name: String, val registerTime: Long) {
+
+    companion object {
+
+        // companion object는 클래스 내부에 존재하므로
+        // private로 선언된 생성자에 접근할 수 있음.
+        fun create(name: String) : User {
+            return User(name, System.currentTimeMillis())
+        }
+    }
+}
+```
+
+### inline, noninline
+
+- 고차함수에 전달한 람다는 컴파일 과정에서 익명 클래스로 변환됨.
+- 익명 클래스를 사용하는 코드를 호출할 때마다 매번 새로운 객체가 생성되므로 여러번 호출되는 경우 성능 저하가 일어남.
+- inline함수는 private를 사용하여 함수를 정의할 수 없음.
+- inline으로 처리되지 않아야 하는 매개변수에는 noninline 키워드 추가.
+```
+fun callFunction() {
+    doSomething { print("문자열 출력!") }
+}
+
+// convert to Java
+public void callingFunction() {
+    doSomething(new Function() {
+        @Override
+        public void invoke() {
+            System.out.print("문자열 출력!);
+        }
+    })
+}
+
+inline func doSomethig(body: () -> Unit) {
+    body()
+}
+fun callFunction() {
+    doSomething { print("문자열 출력!") }
+}
+
+// convert to Java
+public void callingFunction() {
+    System.out.print("문자열 출력!")
+}
+
+inline fun doSomethig(
+    inlineBody: () -> Unit,
+    noninline notInlinedBody: () -> Unit) {
+        ....
+    }
+)
+```
