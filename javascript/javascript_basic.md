@@ -46,3 +46,20 @@ console.log(elements.join('-'));
  * applies to Chrome13, FF6, Opera11 and IE9. Checking other browsers and versions is left as an exercise for the reader.
 
  https://stackoverflow.com/a/7124907
+
+
+ ### Spread Operator
+ - object를 merge할 때 키가 중복시 마지막 Object의 값으로 덮어버린다.
+```
+const person1 = { name: 'David Walsh', age: 33 };
+const person2 = { name: 'David Walsh Jr.', role: 'kid' };
+
+const merged = {...person1, ...person2}
+/*
+Object {
+  "name": "David Walsh Jr.",
+  "age": 33,
+  "role": "kid",
+}
+*/
+```
