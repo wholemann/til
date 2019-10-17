@@ -1,0 +1,1 @@
+- global variable에 state를 유지하지 말 것. 테스팅에서 문제가 생김.

@@ -45,3 +45,15 @@ git rebase upstream/master
 // push -f 를 하면 자동으로 pull request도 갱신된다.
 git push origin develop -f
 ```
+
+rebase 중 했던 작업을 모두 초기화
+```
+git rebase --abort
+```
+
+커밋 지우기: git reset --hard HEAD~1
+전체복구하기: git reset --hard origin/master
+
+rebase 시 같은 파일을 작업하여 충돌이 난다면 충돌을 해결하고
+git add [수정된 파일]
+git rebase --continue (rebase 중 충돌이 났기 때문에 rebase --continue를 해줘야 함)
