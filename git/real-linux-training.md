@@ -57,3 +57,26 @@ git rebase --abort
 rebase 시 같은 파일을 작업하여 충돌이 난다면 충돌을 해결하고
 git add [수정된 파일]
 git rebase --continue (rebase 중 충돌이 났기 때문에 rebase --continue를 해줘야 함)
+
+
+### 오픈 소스 커밋하기
+
+- commit 메시지는 Why: 70~80% How: 20~30%
+- commit 예시)
+```
+Fs/ex4: Fix the B problem
+
+When ~~~, the B error can occur.
+The reason is that  ~~~
+
+Before: 
+After: 
+
+Fixes: the commit 5637d49 ("fs/ext4: Add B feature")
+Fixes: #91
+
+Cc: Namhung Kim <namhyung@kernel.org>
+Reviewed-by:
+Suggested-by:
+Reported-by:
+```
