@@ -1,3 +1,5 @@
+# 1회차
+
 ## JavaScript Now
 
 ES11(2020) - 완전히 달라짐.
@@ -97,4 +99,41 @@ ES11(2020) - 완전히 달라짐.
 - continuation
 - 이를 활용하는 프로그래밍 스타일: Continuation Passing Style
 
+
+# 2회차
+
+## Concurrency
+
+- 시분할로 쪼개서 번갈아 실행하여 마치 동시에 일어나는 것처럼 보임.
+
+### Parallelism
+
+- 태스크가 할당된 Worker가 동시에 존재.
+- 문제는 공유 메모리.
+- 공유 메모리가 Blocking 됐을 때 => 좌절, 밀어내기, 대기 (이건 언어마다 정책이 다름)
+
+### Concurrency
+
+- 메모리를 동시에 쓰는 일이 없음. 번걸아 가며 쓰기 때문.
+- Worker가 1개.
+
+## Real World Concurrency
+
+### JavaScript Concurrency
+
+- 소비자를 한명 둔 패턴 = pipe 패턴.
+- 생산자는 얼마든지 늘어나도 됨.
+
+## Non Blocking For
+
+## Generator
+
+- yield는 suspend를 일으키고, next는 resume을 일으킴.
+- next 후 suspend한 곳에서 resume이 일어남.
+
+## Promise
+
+- callback은 제어권의 상실이 가장 큰 문제점.
+- 내가 원할 때 then을 호출 할 수 있다.
+- Promise.then 을 하는 순간 callback과 똑같이 쓰는 것.
 
