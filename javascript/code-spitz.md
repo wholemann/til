@@ -137,3 +137,14 @@ ES11(2020) - 완전히 달라짐.
 - 내가 원할 때 then을 호출 할 수 있다.
 - Promise.then 을 하는 순간 callback과 똑같이 쓰는 것.
 
+# 3회차
+
+## Continuation Passing Style
+
+### Continuation & Resume
+
+- 핵심은 큰 일을 쪼개서 동기 블럭을 작게 만드는 것.
+- 이번엔 이정도만 하고 제어권을 돌려준다 -> 다음에 다시 받아서 중지했던 부분부터 시작.
+- 객체는 역할. 객체의 책임은 메소드에서. 객체의 권력은 상태로부터.
+- abc언어에 제어구문(for, while)이 갖고 있는 stack clear 기능을 이용한 게 cps. stack over flow가 없음.
+
