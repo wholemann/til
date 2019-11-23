@@ -148,3 +148,17 @@ ES11(2020) - 완전히 달라짐.
 - 객체는 역할. 객체의 책임은 메소드에서. 객체의 권력은 상태로부터.
 - abc언어에 제어구문(for, while)이 갖고 있는 stack clear 기능을 이용한 게 cps. stack over flow가 없음.
 
+# 4회차
+
+## Sequential Async
+
+- Promise 객체를 외부에 리턴하는 이유는 then을 외부에서 호출이 가능. 제어권을 넘김.
+
+## Async Iterator
+
+- async/await를 쓰면 외부에 제어권을 줄 방법이 없음.
+
+## Pass Param
+
+## DataPass
+
