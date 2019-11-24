@@ -70,3 +70,34 @@
 
 - Servlet 스펙상 문자열 아니면 Binary 데이터 뿐.
 - Spring이 내부적으로 타입 변환 스펙을 가지고 있음.
+
+# 2일차
+
+## Error 처리
+
+- 중앙으로 던지는 것. 비지니스 로직 내에서 처리하는 것.
+- 사용자가 보기 편한 것과 개발자가 보기 편한 에러 메시지는 다름.
+- 등록된 에러처리 Bean이 없으면 기본 에러처리를 선택하는 전략.
+- @Bean = 컨테이너에 등록된 관리대상(스프링 입장에선 Component, Controller 모두 Bean)
+
+## 로그인
+
+- Spring MVC는 서블릿을 추상화 시켰기 때문에 Serlet API 사용하는 걸 지양해야됨.
+- 종속적인 코드는 테스트가 어려워짐.
+- Java Bean 규약을 지킨다는 것 = getter setter를 갖춘 클래스
+- 각 ExceptionHandler의 스코프는 선언된 해당 핸들러가 선언된 Controller에 한정됨.
+- BindingResult는 개발자가 에러를 핸들링하겠다는 선언.
+- [session-management-using-spring-session](https://sivalabs.in/2018/02/session-management-using-spring-session-jdbc-datastore/)
+
+## 세션
+
+- 매번 UserSession Repository에서 get하기 보다는 핸들러 한 곳에서 처리하도록 함.
+- filter는 스프링이 생성하지만 사용은 컨테이너에게 위임.
+- UserSessionFilter에게 인증 방식을 책임지게 하면서 RolesVerifyHandlerInterceptor는 세션과 관련이 없게 됨.
+- RolesVerifyHandlerInterceptor는 Session을 쓰든 JWT를 쓰든 관심이 없다.
+
+## 프로필 이미지 저장
+
+- 영구 저장을 위해 확장성을 고려해야됨.
+- 해당 어플리케이션 서버가 아닌 다른 외부 저장소를 이용할 수도 있기 때문.
+- 그래서 추상화가 필요하고 영구 저장을 위한 인터페이스가 필요함.
